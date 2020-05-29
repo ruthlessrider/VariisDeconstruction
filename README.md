@@ -212,7 +212,7 @@ At this point, a common response is provided as the following payload;
 }
 ```
 
-It can further be assumed that the app is attempted to generate a signed URL for the class video, but a backend web service is performing authentication to ensure the account has a valid payment method/subscription attached.
+It can further be assumed that the app is attempting to generate a signed URL for the class video, but a backend web service is performing authentication to ensure the account has a valid payment method/subscription attached.
 
 # Peloton
 The Peloton "tablet" runs a variant of Android OS; Peloton itself is an app on the Android device, and like any Android smartphone, there is a home screen and built-in browser.  Multiple methods of accessing the built-in browser exist (two are linked below).  Upon completion of the below "to-do," it is believed that accessing a dedicated website, which leverages many of the aforementioned APIs, could be created to allow users subscribed to Variis to view classes on their Peloton bike.
