@@ -11,7 +11,7 @@ The Variis app is SoulCycle (technically Equinox Media)'s iOS/Android app for vi
 The Variis app requires a login (username and password).  At present, there are two known ways of acquiring a Variis login;
 - Being an existing Equinox member, using your Equinox credentials to log into the Variis app
 - By creating a Variis account during the purchase of the SoulCycle-at-home bike.
-  - This can be performed by visting the purchase page for the SoulCycle-at-home bike (https://www.variis.com/bike/at-home) and entering a zip code where the bike is available (for example, 10014, the zip code of SoulCycle's corporate office).  Upon moving to the next step, choose *Reserve Your Bike* and enter credentials to create a Variis account.  Upon account creation, you can exist the browser.  No personal information/billing information needs to be entered.
+  - This can be performed by visting the purchase page for the SoulCycle-at-home bike (https://www.variis.com/bike/at-home) and entering a zip code where the bike is available (for example, 10014, the zip code of SoulCycle's corporate office).  Upon moving to the next step, choose *Reserve Your Bike* and enter credentials to create a Variis account.  Upon account creation, you can exit the browser.  No personal information/billing information needs to be entered.
   
 # API Endpoints
 
