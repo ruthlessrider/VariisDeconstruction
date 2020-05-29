@@ -58,7 +58,7 @@ The Variis app requires a login (username and password).  At present, there are 
 		"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJ1c2VySWQiOiJmYzJjZjcyYi00ZjFlLTQxZDItYTFmMy0wMGU2NDJjYTE5NjkiLCJkZXZpY2VJZCI6IjVhOGRmMDk1LTdmNTEtNDk2NS1hNjlhLWIxMzkyMDAyMGJkNCIsImJyYW5kcyI6e30sImNsaWVudElkIjoiYXBwLW1vYmlsZSIsInJlZnJlc2hJZCI6IjFiMzU2MWUxLTE5M2EtNGQ4NS1hMzk2LTNkNTIwOWQ5ZWY5ZSIsInN1YnNjcmlwdGlvblR5cGUiOm51bGwsInN1YnNjcmlwdGlvblNvdXJjZSI6bnVsbCwic3Vic2NyaXB0aW9uQWN0aXZlIjpmYWxzZSwiaWF0IjoxNTkwNzEwOTQ1LCJleHAiOjE1OTA3MTQ1NDV9w7c+w6DCs33Dk8Ksw6E9w4fDj1h7LhkPwrHChcKNwpLDs8KEN0TCtGEdw4/CgmHChR0=", // Base64 encoded string with account data.  See below.
 		"expires_in": 3599, // Time the access valid is valid for before a new token is required
 		"token_type": "bearer", // Unknown other values for "token_values"
-		"refresh_token": "0ff4a04e-0811-4c04-b1fe-da86cd194819" // Unknown use
+		"refresh_token": "33243eab-385c-4542-a5f5-eb8833eb645a" // Unknown use
 	}
 }
 // Valid reponse
@@ -110,7 +110,7 @@ The following response can be expected;
 ```
 
 # Content Listing
-Upon receiving a successful response related to account data, the app will make multiple further calls to the same `https://api.coreplatformx.com/graphql/` endpoint.  For the sake of brevity, not all calls will be listed in this document.  Most of the calls relate to UI-based criteria (size of the items on screen, URLs for class hero images and instructor images), though this section does include calls for the listing of available content/classes.
+Upon receiving a successful response related to account data, the app will make multiple further calls to the same `https://api.coreplatformx.com/graphql/` endpoint.  For the sake of brevity, not all calls will be listed in this document.  Most of the calls relate to UI-based criteria (size of the items on screen, URLs for class hero images and instructor images), though this section does include calls for the listing of available content/classes.  The app appears based heavily on React Native, with responses to many of the aforementioned calls following common formats that generate the user interface for both iOS and Android.  This example relates to querying class data/listings;
 
 A **POST** request is sent to the aforementioned endpoint with the following payload;
 ```
