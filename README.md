@@ -84,9 +84,145 @@ The `access_token` can be decoded, which indicates the following data;
 }
 ```
 
+# Account Data
+Upon completing a successful login, the Variis app will attempt to query account data at the following endpoint; `https://api.coreplatformx.com/graphql/`.  Future API calls leverage the **GraphQL** standard.  Upon receiving a valid *access_token*, as referenced above, a call is made using the **POST** method with the following payload;
 
+```
+{
+	"operationName": "UserDetailsQuery",
+	"variables": {},
+	"query": "query UserDetailsQuery {\n  me {\n    id\n    email\n    __typename\n  }\n}\n"
+}
+```
+
+The following response can be expected;
+
+```
+{
+	"data": {
+		"me": {
+			"id": "fc2cf72b-4f1e-41d2-a1f3-00e642ca1969",
+			"email": "email@email.com",
+			"__typename": "User"
+		}
+	}
+}
+```
+
+# Content Listing
+Upon receiving a successful response related to account data, the app will make multiple further calls to the same `https://api.coreplatformx.com/graphql/` endpoint.  For the sake of brevity, not all calls will be listed in this document.  Most of the calls relate to UI-based criteria (size of the items on screen, URLs for class hero images and instructor images), though this section does include calls for the listing of available content/classes.
+
+A **POST** request is sent to the aforementioned endpoint with the following payload;
+```
+{
+	"operationName": "BEGetSessionQuery",
+	"variables": {
+		"brandAccentedLogoResize": {
+			"maxHeight": 100,
+			"maxWidth": 180
+		},
+		"heroResizeParameters": {
+			"maxHeight": 750,
+			"maxWidth": 750
+		},
+		"id": "Y2xhc3M6d29ya18xMTVjNmE5ZmNjZGQ0M2U0YmI5ZWM2ODI5Y2ZiOWRiMQ=="
+	},
+	"query": "query BEGetSessionQuery($id: ID!, $heroResizeParameters: ResizeParameters, $brandAccentedLogoResize: ResizeParameters) ... // This has been truncated for brevity
+}
+```
+
+A successful response will provide a list of classes and all relevant metadata (response is being omitted from this Readme both due to length, as well as likelihood that listings will change frequently).  This includes class name, duration, difficulty, instructor, related classes, required equipment for the class, URLs to thumbnail images, ID of the class, etc.
+
+# Account Status (Content Gate Status)
+In addition to querying settings for the app's UI and class listings, the app will perform a request to determine whether the Variis account is valid (a "paid" subscriber).  A request is made to the same `https://api.coreplatformx.com/graphql/` endpoint.  A **POST** request is made with the following payload;
+
+```
+{
+	"operationName": "BEContentGateStatusQuery",
+	"variables": {},
+	"query": "query BEContentGateStatusQuery {\n  me {\n    id\n    isSubscriptionActive\n    __typename\n  }\n}\n"
+}
+```
+
+A successful response will provide the following payload;
+
+```
+{
+	"data": {
+		"me": {
+			"id": "fc2cf72b-4f1e-41d2-a1f3-00e642ca1969", // The Variis account ID
+			"isSubscriptionActive": false, // The subscribed state of the account
+			"__typename": "User" // Unknown as to other values
+		}
+	}
+}
+```
+
+The `isSubscriptionActive` key provides the Variis app clues as to whether content can be tapped to learn more/begin a class, or whether content should be "locked" due to an invalid subscription.  Interrupting this POST request and altering the `isSubscriptionActive` key to a value of `true` will allow further access to class metadata.
+
+# Session Media
+Without a valid subscription, it has been further difficult to prove the feasability of accessing SoulCycle content on other devices.  When tapping to **Begin Class** within the Variis app, the app sends a **POST** request to the same `https://api.coreplatformx.com/graphql/` endpoint, with the following payload;
+
+```
+{
+	"operationName": "SessionMedias",
+	"variables": {
+		"nodeId": "Y2xhc3M6d29ya19kMTEyYzkzMWQxYmY0NTg0OTk1OTJiNjc3YWJlMDU2Ng=="
+	},
+	"query": "query SessionMedias($nodeId: ID!) {\n  session: node(id: $nodeId) ..." // Truncated for brevity
+}
+```
+
+At this point, a common response is provided as the following payload;
+
+```
+{
+	"errors": [{
+		"message": "[https://api.coreplatformx.com/videos/jZixuhSLLJw1Abceu5qdfgrc79LpQowq/signedUrl/] Payment Required",
+		"locations": [{
+			"line": 11,
+			"column": 13
+		}],
+		"path": ["session", "media", "classVideo", "signedUrl"],
+		"extensions": {
+			"code": "INTERNAL_SERVER_ERROR",
+			"exception": {
+				"name": "AppError",
+				"status": "00001",
+				"code": "00001"
+			}
+		}
+	}],
+	"data": {
+		"session": {
+			"__typename": "Class",
+			"id": "Y2xhc3M6d29ya19kMTEyYzkzMWQxYmY0NTg0OTk1OTJiNjc3YWJlMDU2Ng==",
+			"completionPointInSeconds": 1680,
+			"media": {
+				"classVideo": {
+					"id": "dmlkZW86YXNzZV9mZjBjNTAwODBiMTE0ZjIwOWNlYjFiMzYyYTBhNWQ4OA==",
+					"signedUrl": null,
+					"__typename": "Video"
+				},
+				"classAudio": null,
+				"__typename": "ClassMedia"
+			}
+		}
+	}
+}
+```
+
+It can further be assumed that the app is attempted to generate a signed URL for the class video, but a backend web service is performing authentication to ensure the account has a valid payment method/subscription attached.
 
 # Peloton
-The Peloton "tablet" runs a variant of Android OS; Peloton itself is an app on the Android device, and like any Android smartphone, there is a home screen and built-in browser.  Multiple methods of accessing the built-in browser exist (two are linked below).  Upon completion of the above "to-do," it is believed that accessing a dedicated website, which leverages many of the aforementioned APIs, could be created to allow users subscribed to Variis to view classes on their Peloton bike.
+The Peloton "tablet" runs a variant of Android OS; Peloton itself is an app on the Android device, and like any Android smartphone, there is a home screen and built-in browser.  Multiple methods of accessing the built-in browser exist (two are linked below).  Upon completion of the below "to-do," it is believed that accessing a dedicated website, which leverages many of the aforementioned APIs, could be created to allow users subscribed to Variis to view classes on their Peloton bike.
 - https://www.theverge.com/2019/8/14/20801983/youtube-plex-web-browser-peloton-bike-treadmill-how-to-watch
 - https://www.reddit.com/r/pelotoncycle/comments/a7ttuz/browser_without_subscription/
+
+# TODO:
+To further prove feasability of accessing a SoulCycle class on other platforms, further analysis of the class' video URL will need to be performed.  The following tasks can be assumed;
+- [ ] Access a class video with a valid/subscribed Variis login and determine formatting of signed URL
+- [ ] Determine additional metadata of signed URL, such as URL expiration date and relevant content protections
+- [ ] Determine if video can be downloaded via CURL/accessed by a browser outside of Variis app
+- [ ] If video cannot be played outside of app, determine what sort of content protection exists to prevent playback
+- [ ] Determine if a rudiemntary proof of concept website, which leverages all of the same API endpoints, could be used to allow playback.
